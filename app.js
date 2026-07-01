@@ -394,6 +394,89 @@ const INITIAL_STATE = {
     { id: "q-10", token: "T10", patientId: "pat-10", apptType: "Follow-up", time: "01:30 PM", assessmentStatus: "Done", status: "Scheduled" }
   ],
 
+  invoices: [
+    {
+      id: "inv-1",
+      invoiceNumber: "INV-2025-001",
+      patientId: "pat-4",
+      patientName: "Aditya Verma",
+      date: "2025-06-24",
+      dueDate: "2025-06-24",
+      items: [
+        { desc: "Psychiatric Consultation (New)", qty: 1, unitPrice: 1200 }
+      ],
+      subtotal: 1200,
+      tax: 0,
+      discount: 0,
+      total: 1200,
+      amountPaid: 1200,
+      status: "Paid",
+      paymentMethod: "UPI",
+      paymentDate: "2025-06-24 10:55 AM",
+      notes: "First time consultation fee collected"
+    },
+    {
+      id: "inv-2",
+      invoiceNumber: "INV-2025-002",
+      patientId: "pat-6",
+      patientName: "Neha Gupta",
+      date: "2025-06-24",
+      dueDate: "2025-06-24",
+      items: [
+        { desc: "Psychiatric Consultation (Follow-up)", qty: 1, unitPrice: 1000 }
+      ],
+      subtotal: 1000,
+      tax: 0,
+      discount: 0,
+      total: 1000,
+      amountPaid: 1000,
+      status: "Paid",
+      paymentMethod: "Cash",
+      paymentDate: "2025-06-24 11:45 AM",
+      notes: "Follow-up consultation fee collected"
+    },
+    {
+      id: "inv-3",
+      invoiceNumber: "INV-2025-003",
+      patientId: "pat-1",
+      patientName: "Meera Nair",
+      date: "2025-06-24",
+      dueDate: "2025-06-24",
+      items: [
+        { desc: "Psychiatric Consultation (Follow-up)", qty: 1, unitPrice: 1000 }
+      ],
+      subtotal: 1000,
+      tax: 0,
+      discount: 0,
+      total: 1000,
+      amountPaid: 0,
+      status: "Unpaid",
+      paymentMethod: "",
+      paymentDate: "",
+      notes: "Consultation complete. Payment pending."
+    },
+    {
+      id: "inv-4",
+      invoiceNumber: "INV-2025-004",
+      patientId: "pat-2",
+      patientName: "Arjun Mehta",
+      date: "2025-06-24",
+      dueDate: "2025-06-24",
+      items: [
+        { desc: "Psychiatric Consultation (Follow-up)", qty: 1, unitPrice: 1000 }
+      ],
+      subtotal: 1000,
+      tax: 0,
+      discount: 0,
+      total: 1000,
+      amountPaid: 0,
+      status: "Unpaid",
+      paymentMethod: "",
+      paymentDate: "",
+      notes: "Consultation complete. Payment pending."
+    }
+  ],
+
   activeConsultation: null
 };
 
@@ -411,6 +494,10 @@ class StateManager {
         const parsed = JSON.parse(saved);
         // Force refresh state if patient list count is less than 10 or queue has no Scheduled items (migration step)
         if (parsed.patients && parsed.patients.length >= 10 && parsed.queue && parsed.queue.some(q => q.status === 'Scheduled')) {
+          if (!parsed.invoices) {
+            parsed.invoices = JSON.parse(JSON.stringify(INITIAL_STATE.invoices));
+            this.saveState(parsed);
+          }
           return parsed;
         }
       } catch (e) {
